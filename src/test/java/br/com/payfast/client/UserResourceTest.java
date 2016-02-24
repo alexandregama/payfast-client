@@ -3,19 +3,23 @@ package br.com.payfast.client;
 import static org.junit.Assert.assertEquals;
 
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 
 import org.junit.Test;
 
 public class UserResourceTest {
 
 	@Test
-	public void shouldRetrieveAnUserByItsId() throws Exception {
-		Payment payment = ClientBuilder.newClient()
-			.target("http://127.0.0.1:8080/payfast/payments/1")
-			.request()
-			.accept("application/json")
-			.get(Payment.class);
+	public void shouldSaveANewUser() throws Exception {
+		User user = new User(6L, "Gustavo Silva");
 		
-		assertEquals(1L, payment.getId(), 0);
+		User savedUser = ClientBuilder.newClient()
+			.target("http://localhost:8080/payfast/users")
+			.request()
+			.buildPost(Entity.json(user))
+			.invoke(User.class);
+		
+		assertEquals("Gustavo Silva", savedUser.getName());
 	}
+	
 }
